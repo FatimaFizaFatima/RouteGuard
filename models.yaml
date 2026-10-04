@@ -1,0 +1,43 @@
+models:
+  - id: local-fast
+    provider: ollama
+    model: llama3.2:1b
+    tasks: [chat, summarization]
+    cost_per_1m_input: 0
+    cost_per_1m_output: 0
+    max_context: 4096
+    timeout_s: 40
+    quality: 5
+
+  - id: local-balanced
+    provider: ollama
+    model: gemma2:2b
+    tasks: [code, chat, summarization]
+    cost_per_1m_input: 0
+    cost_per_1m_output: 0
+    max_context: 4096
+    timeout_s: 60
+    quality: 7
+
+  - id: cloud-gemini
+    provider: gemini
+    model: gemini-3.1-flash-lite
+    tasks: [chat, summarization, code, translation]
+    cost_per_1m_input: 0       
+    cost_per_1m_output: 0
+    max_context: 100000        
+    timeout_s: 30
+    quality: 8  
+
+
+strategies:
+      cheapest: { cost: 0.7, latency: 0.2, quality: 0.1 }
+      fastest:  { cost: 0.1, latency: 0.7, quality: 0.2 }
+      quality:  { cost: 0.1, latency: 0.1, quality: 0.8 }
+      balanced: { cost: 0.3, latency: 0.3, quality: 0.4 }
+
+routes:
+      chat: fastest
+      summarization: balanced
+      code: quality
+      default: balanced
